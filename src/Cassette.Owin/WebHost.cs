@@ -36,11 +36,14 @@ namespace Cassette.Owin
             Container.Register<ICassetteRequestHandler, AssetRequestHandler>("AssetRequestHandler").AsPerRequestSingleton(CreateRequestLifetimeProvider());
             Container.Register<ICassetteRequestHandler, BundleRequestHandler<ScriptBundle>>("ScriptBundleRequestHandler").AsPerRequestSingleton(CreateRequestLifetimeProvider());
             Container.Register<ICassetteRequestHandler, BundleRequestHandler<StylesheetBundle>>("StylesheetBundleRequestHandler").AsPerRequestSingleton(CreateRequestLifetimeProvider());
+            // Uncomment these 2 to disable rewriting
             Container.Register<ICassetteRequestHandler, BundleRequestHandler<HtmlTemplateBundle>>("HtmlTemplateBundleRequestHandler").AsPerRequestSingleton(CreateRequestLifetimeProvider());
             Container.Register<ICassetteRequestHandler, RawFileRequestHandler>("RawFileRequestHandler").AsPerRequestSingleton(CreateRequestLifetimeProvider());
 
             base.ConfigureContainer();
 
+            // Register this custom url generator to skip url generation for other content
+            //Container.Register<IUrlGenerator>((c, n) => new OwinUrlGenerator(new UrlGenerator(c.Resolve<IUrlModifier>(), c.Resolve<CassetteSettings>().SourceDirectory, _options.RouteRoot + "/")));
             Container.Register<IUrlGenerator>((c, n) => new UrlGenerator(c.Resolve<IUrlModifier>(), c.Resolve<CassetteSettings>().SourceDirectory, _options.RouteRoot + "/"));
             Container.Register<IUrlModifier>((c, n) => new VirtualDirectoryPrepender("/"));
         }

@@ -81,6 +81,7 @@ namespace Cassette.Owin
                 return _host.ProcessRequest(context, Next);
             }
 
+            //return Next.Invoke(context);
             return _host.ProcessRewriteRequest(context, Next);
         }
     }
